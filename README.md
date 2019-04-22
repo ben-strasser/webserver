@@ -100,9 +100,12 @@ int main(){
                 worker_data.seen[num] = true;
             }
             std::ostringstream out;
-            for(int i=0; i<max_num; ++i)
-                if(worker_data.seen[i])
+            for(int i=0; i<max_num; ++i){
+                if(worker_data.seen[i]){
                     out << i << ' ';
+                    worker_data.seen[i] = false;
+                }
+            }
             res.body = out.str();
             if(!res.body.empty())
                 res.body.back() = '\n';

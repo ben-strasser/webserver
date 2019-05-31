@@ -171,6 +171,7 @@ struct Config{
     int max_request_body_size;
     int max_request_resource_size;
     int timeout_in_seconds;
+    bool print_exception_message_in_answer;
 
     Config();
 };
@@ -184,5 +185,6 @@ The default constructor sets sensible default values for every parameter. If in 
 * max_request_body_size: How many bytes may an uploaded file have at most?
 * max_request_resource_size: How many bytes may a URL including GET parameters have at most?
 * install_int_signal_handler: If true, the handler for SIGINT (CTRL+C) is replaced to allow for a graceful shutdown. In the awkward case, that you want to run multiple servers within one program from different threads, this value must be set to false, as only one server can replace the singal handler. The previous signal handler is restored after the server finishes.
+* print_exception_message_in_answer: If true, the content of `std::exception::what` is put into the answer to the client.
 
 *Warning*: The reason why `max_request_body_size` and `max_request_resource_size` exist is to prevent attacks from a rogue client. Any client can force the server to allocate this much memory before any handler is run. Be sure that your server can allocate `(max_request_body_size+max_request_resource_size) * worker_count` bytes of memory.

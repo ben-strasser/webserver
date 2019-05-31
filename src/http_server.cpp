@@ -30,6 +30,7 @@ namespace io{
             max_request_body_size = 1<<23;
             max_request_resource_size = 1<<14;
             timeout_in_seconds = 10;
+            print_exception_message_in_answer = true;
         }
 
         namespace{
@@ -614,6 +615,11 @@ namespace io{
                 return true;
             }
 
+            void answer_with_bad_request(int conn_socket)noexcept{
+                char msg[] = "HTTP/1.0 400 Bad request\r\n";
+                write_all(conn_socket, msg, msg + sizeof(msg)-1);
+            };
+
             void answer_with_bad_request(int conn_socket, const char*error)noexcept{
                 HeaderFormatter out;
 
@@ -869,9 +875,15 @@ namespace io{
                             handler(worker_id, config.worker_count, user_data, request, response);
                             answer_with_response(conn_socket, response);
                         }catch(std::exception&err){
-                            answer_with_exception(conn_socket, err.what());
+                            if(config.print_exception_message_in_answer)
+                                answer_with_exception(conn_socket, err.what());
+                            else
+                                answer_with_bad_request(conn_socket);
                         }catch(...){
-                            answer_with_exception(conn_socket, "unknown exception");
+                            if(config.print_exception_message_in_answer)
+                                answer_with_exception(conn_socket, "unknown exception");
+                            else
+                                answer_with_bad_request(conn_socket);
                         }
                     }
                     shutdown(conn_socket, SHUT_RDWR);

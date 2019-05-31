@@ -38,6 +38,7 @@ namespace io{
             int max_request_body_size;
             int max_request_resource_size;
             int timeout_in_seconds;
+            bool print_exception_message_in_answer;
 
             Config();
         };

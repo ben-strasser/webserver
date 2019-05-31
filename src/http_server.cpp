@@ -812,6 +812,8 @@ namespace io{
                         return "call to read timed out";
                     else
                         return "internal server error during call to read while reading from socket";
+                }else if(r == 0){
+                    return "end of file/socket reached before HTTP request was completed";                
                 }else{
                     buffer.buffer_size = r;
                     return nullptr;

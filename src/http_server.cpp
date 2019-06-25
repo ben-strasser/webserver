@@ -361,6 +361,8 @@ namespace io{
 
                 bool is_uppercase_string_in_buffer(const char*s)noexcept{
                     for(int i=0; i<buffer_size; ++i){
+                        if(*s == 0)
+                            return false;
                         if(*s != to_upper(buffer[i]))
                             return false;
                         ++s;
